@@ -1,2 +1,3 @@
 ---
-# vars file for terraform
+terraform_url: 'https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_{{ terraform_platform }}.zip'
+terraform_local_file: '{{ terraform_srcdir }}/terraform_{{ terraform_version }}.zip'

@@ -1,13 +1,12 @@
 ---
 - name: mkdir srcdir
-  command: mkdir {{ terraform.srcdir }}
-  creates: '{{ terraform.srcdir }}'
+  command: mkdir {{ terraform_srcdir }}
+  creates: '{{ terraform_srcdir }}'
 
 - name: Download terraform
   get_url:
-    #    https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
-    url: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_{{ terraform_platform }}.zip
-    dest: {{ terraform.srcdir }}/terraform_{{ terraform_version }}.zip
+    url: {{ terraform_url }}
+    dest: {{ terraform_local_file }}
     owner: root
     group: root
     mode: 0644
@@ -21,6 +20,6 @@
 
 - name: Extract terraform
   command:
-    cmd: unzip -o {{ terraform.srcdir }}/terraform_{{ terraform_version }}".zip -d /usr/bin
-    chdir: '{{ terraform.srcdir }}'
+    cmd: unzip -o {{ terraform_local_file }} -d /usr/bin
+    chdir: '{{ terraform_srcdir }}'
   when: terraform_installed_version.stdout != "{{ terraform_version }}"
