@@ -1,2 +1,26 @@
 ---
-# tasks file for terraform
+- name: mkdir srcdir
+  command: mkdir {{ terraform.srcdir }}
+  creates: '{{ terraform.srcdir }}'
+
+- name: Download terraform
+  get_url:
+    #    https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
+    url: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_{{ terraform_platform }}.zip
+    dest: {{ terraform.srcdir }}/terraform_{{ terraform_version }}.zip
+    owner: root
+    group: root
+    mode: 0644
+
+- name: get Terraform version
+  shell: /usr/bin/terraform --version | grep "^Terraform" | cut -f2 -dv
+  register: terraform_installed_version
+  ignore_errors: yes
+  changed_when: false
+  failed_when: false
+
+- name: Extract terraform
+  command:
+    cmd: unzip -o {{ terraform.srcdir }}/terraform_{{ terraform_version }}".zip -d /usr/bin
+    chdir: '{{ terraform.srcdir }}'
+  when: terraform_installed_version.stdout != "{{ terraform_version }}"
