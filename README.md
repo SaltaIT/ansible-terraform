@@ -1,12 +1,12 @@
-Role Name
+terraform
 =========
 
-A brief description of the role goes here.
+Ansible role for installing terraform
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+No requirements
 
 Role Variables
 --------------
@@ -21,16 +21,24 @@ A list of other roles hosted on Galaxy should go here, plus any details in regar
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install terraform on all servers
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+---
+- name: base
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - role: terraform
+```
+
 
 License
 -------
 
-BSD
+Apache-2.0
 
 Author Information
 ------------------
