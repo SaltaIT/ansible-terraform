@@ -1,0 +1,32 @@
+---
+- name: mkdir srcdir
+  command: 
+    cmd: mkdir -p {{ terraform_srcdir }}
+    creates: "{{ terraform_srcdir }}"
+
+- name: mkdir bindir
+  command: 
+    cmd: mkdir -p {{ terraform_bindir }}
+    creates: "{{ terraform_bindir }}"
+
+- name: Download terraform
+  get_url:
+    url: "{{ terraform_url }}"
+    dest: "{{ terraform_local_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    checksum: "{{ terraform_zip_checksum }}"
+
+- name: get Terraform version
+  shell: '{{ terraform_bindir }}/terraform --version | grep "^Terraform" | cut -f2 -dv'
+  register: terraform_installed_version
+  ignore_errors: yes
+  changed_when: false
+  failed_when: false
+
+- name: Extract terraform
+  unarchive:
+    src: "{{ terraform_local_file }}"
+    dest: "{{ terraform_bindir }}"
+  when: terraform_installed_version.stdout != terraform_version
